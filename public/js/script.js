@@ -5,6 +5,16 @@ const loginTitle = document.querySelector(".title-login");
 const registerTitle = document.querySelector(".title-register");
 const signUpBtn = document.querySelector("#SignUpBtn");
 const signInBtn = document.querySelector("#SignInBtn");
+const list = document.querySelectorAll('.list');
+function activeLink() {
+    list.forEach((item) =>
+    item.classList.remove('active'));
+    this.classList.add('active');
+}
+list.forEach((item) =>
+item.addEventListener('click',activeLink));
+
+
 function loginFunction(){
     loginForm.style.left = "50%";
     loginForm.style.opacity = 1;
@@ -85,3 +95,27 @@ signInBtn.addEventListener("click", async (e) => {
     alert("An error occurred. Check the console.");
   }
 });
+
+document.getElementById('courseForm')
+      .addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = document.getElementById('courseForm');
+        const data = new FormData(form);
+
+        try {
+          const res = await fetch('/courses', {
+            method: 'POST',
+            body: data
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('Course created!');
+            window.location.href = '/teacher.html';
+          } else {
+            alert('Error: ' + result.error);
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Upload failed.');
+        }
+      });
