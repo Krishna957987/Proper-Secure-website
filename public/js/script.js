@@ -51,20 +51,37 @@ signUpBtn.addEventListener("click", async () => {
 
 // Login
 signInBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("log-email").value;
-    const password = document.getElementById("log-pass").value;
+  e.preventDefault();
 
+  const email = document.getElementById("log-email").value;
+  const password = document.getElementById("log-pass").value;
+
+  try {
     const res = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
-
     const data = await res.json();
-    if (data.success) {
-        alert("Login successful!");
-    } else {
-        alert("Login failed: " + data.error);
+
+    if (!data.success) {
+      return alert("Login failed: " + data.error);
     }
+
+    // Redirect based on role:
+    switch (data.user.role) {
+      case "teacher":
+        window.location.href = "/teacher.html";
+        break;
+      case "student":
+        window.location.href = "/student.html";
+        break;
+      default:
+        alert("Unknown role: " + data.user.role);
+    }
+
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("An error occurred. Check the console.");
+  }
 });
