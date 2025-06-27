@@ -27,3 +27,44 @@ function registerFunction(){
     registerTitle.style.top = "50%";
     registerTitle.style.opacity = 1;
 }
+
+// Registration
+signUpBtn.addEventListener("click", async () => {
+    const email = document.getElementById("reg-email").value;
+    const password = document.getElementById("reg-pass").value;
+    const role = document.getElementById("reg-role").value;
+
+    const res = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+        alert("Registration successful!");
+        loginFunction();
+    } else {
+        alert("Error: " + data.error);
+    }
+});
+
+// Login
+signInBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("log-email").value;
+    const password = document.getElementById("log-pass").value;
+
+    const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+        alert("Login successful!");
+    } else {
+        alert("Login failed: " + data.error);
+    }
+});
